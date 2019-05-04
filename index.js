@@ -21,6 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // ROUTES
 app.get('/', controller.getHome);
+app.get('/signup', controller.getSignup);
 app.get('*', (req,res) => {res.send('404 not found')});
 
 app.listen(3000, () => console.log('Listen port: 3000'))
