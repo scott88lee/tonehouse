@@ -17,9 +17,5 @@
     "url": "https://github.com/scott88lee/tonehouse/issues"
   },
   "homepage": "https://github.com/scott88lee/tonehouse#readme",
-  "dependencies": {
-    "express": "^4.16.4",
-    "express-handlebars": "^3.0.2",
-    "pg": "^7.10.0"
-  }
+  "dependencies": {}
 }
