@@ -2,4 +2,9 @@
 
 Create a web presence and an online booking site for a music studio.
 
-Decided to switch to Vue and Firebase for simplicity
+Backend:
+EC2 running Node, Express serving API
+RDS running Postgres
+
+Frontend
+VueJS with Semantic UI
