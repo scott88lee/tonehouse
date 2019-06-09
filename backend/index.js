@@ -36,8 +36,22 @@ app.get('*', (req, res) => {
 })
 
 app.post('/signup', (req, res) => {
-	console.log(req.body);
+	//console.log(req.body);
+	let u = req.body;
+
+	let queryString = "INSERT INTO users(bandname, genre, email, bandmembers, contactperson, contactnumber, approval, pwdhash)VALUES('" + u.bandname + "', '" + u.genre + "', '" + u.email + "', " + u.bandmembers + ", '" + u.contactperson + "', '" + u.number + "', '" + u.approval + "', '" + u.pass+ "');"
+	console.log(queryString);
+
+	pool.query(queryString, (err, result) =>{
+		if (err) console.log(err);
+
+		console.log(result);
+	})
 	res.send({msg:"OK"});
+
+	//Validation required
+	// Check if username exist
+	// if email exit return error
 })
 
 app.listen(3000, () => console.log('Listen port: 3000'));

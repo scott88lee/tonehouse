@@ -43,7 +43,7 @@ export default {
     return {
       user: {
         bandname: "",
-        status: "Pending"
+        approval: "Pending"
       },
       errors: []
     };
