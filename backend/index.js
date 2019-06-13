@@ -1,4 +1,5 @@
 const express = require('express');
+const bcrypt = require('bcrypt');
 const cors = require('cors');
 const pg = require('pg');
 
@@ -35,23 +36,32 @@ app.get('*', (req, res) => {
 	});
 })
 
-app.post('/signup', (req, res) => {
-	//console.log(req.body);
+app.post('/signup', (req, res)  => {
 	let u = req.body;
 
-	let queryString = "INSERT INTO users(bandname, genre, email, bandmembers, contactperson, contactnumber, approval, pwdhash)VALUES('" + u.bandname + "', '" + u.genre + "', '" + u.email + "', " + u.bandmembers + ", '" + u.contactperson + "', '" + u.number + "', '" + u.approval + "', '" + u.pass+ "');"
-	console.log(queryString);
+	let sqlQuery = "SELECT * FROM users WHERE email = '" + u.email + "'";
+	
+  pool.query(sqlQuery, (err, result) => {
+      if (err) console.log("Query error: " + err);
+      
+      if (result.rows.length === 0) {  // E-mail doesn't exist in DB
 
-	pool.query(queryString, (err, result) =>{
-		if (err) console.log(err);
+        bcrypt.hash(u.pass, 10, (err,hash) => {   // Hashes password
 
-		console.log(result);
-	})
-	res.send({msg:"OK"});
+          // Stores into DB users
+          let insertQuery = "INSERT INTO users(bandname, genre, email, bandmembers, contactperson, contactnumber, approval, pwdhash)VALUES('" + u.bandname + "', '" + u.genre + "', '" + u.email + "', " + u.bandmembers + ", '" + u.contactperson + "', '" + u.number + "', '" + u.approval + "', '" + hash + "');"
+          pool.query(insertQuery, (err, result) => {  // STORE SIGNUP DATA
+            if (err) console.log("Second Query Error: "+ err);
 
-	//Validation required
-	// Check if username exist
-	// if email exit return error
-})
+            console.log(`New user signed up ${u.email}.`);
+            res.send({foo:'bar'});
+          });
+        });
+		} else {  //END - FRESH EMAIL
+			console.log("Email already in use.")
+      res.send({errMsg:"E-mail is already in use."})
+    } 
+  }); // FIRST SQL QUERY 
+});
 
 app.listen(3000, () => console.log('Listen port: 3000'));
