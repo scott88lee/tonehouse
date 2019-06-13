@@ -64,4 +64,22 @@ app.post('/signup', (req, res)  => {
   }); // FIRST SQL QUERY 
 });
 
+app.post('/login', (req,res) => {
+	let u = req.body;
+	console.log(u);
+
+	let sql = "SELECT * FROM users where email = '" + u.email + "';"
+	pool.query(sql, (err, result) => {
+		console.log(result.rows);
+		bcrypt.compare(u.pass, result.rows[0].pwdhash, (err, result) => { //run bcryot compare
+			if (result === true) {
+				res.cookie('loggedin', true);
+				console.log("Correct pass")
+			} else {
+				console.log("Wrong password")
+			}
+		})
+	})
+})
+
 app.listen(3000, () => console.log('Listen port: 3000'));
